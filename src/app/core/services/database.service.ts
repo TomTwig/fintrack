@@ -58,6 +58,8 @@ export class DatabaseService {
     const platform = Capacitor.getPlatform();
 
     if (platform === 'web') {
+      // Warten bis das jeep-sqlite Custom Element vollständig registriert ist
+      await customElements.whenDefined('jeep-sqlite');
       await this.sqlite.initWebStore();
     }
 
