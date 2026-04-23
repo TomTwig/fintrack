@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   IonContent,
-  IonGesture,
   IonHeader,
   IonIcon,
   IonItem,

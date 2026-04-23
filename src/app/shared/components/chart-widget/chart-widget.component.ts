@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ChartConfiguration, ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
 import { CategorySummary } from '../../../core/models/transaction.model';
@@ -15,7 +15,7 @@ import { CategorySummary } from '../../../core/models/transaction.model';
           [data]="chartData"
           [options]="chartOptions"
           type="doughnut"
-        />
+        ></canvas>
       </div>
     } @else {
       <div class="chart-empty">
@@ -50,7 +50,7 @@ export class ChartWidgetComponent implements OnChanges {
     datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }],
   };
 
-  chartOptions: ChartConfiguration['options'] = {
+  chartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
     cutout: '70%',
