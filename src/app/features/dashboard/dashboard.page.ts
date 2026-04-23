@@ -1,5 +1,6 @@
-import { CurrencyPipe, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 import {
   IonButton,
@@ -38,7 +39,7 @@ import { CurrencyFormatPipe } from '../../shared/pipes/currency-format.pipe';
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
     IonList, IonItem, IonLabel, IonIcon, IonChip,
     IonFab, IonFabButton, IonButton, IonSkeletonText,
-    NgStyle, CurrencyPipe,
+    NgStyle, CurrencyPipe, DatePipe, RouterLink,
     ChartWidgetComponent, CurrencyFormatPipe,
   ],
   templateUrl: './dashboard.page.html',
