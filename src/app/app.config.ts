@@ -1,6 +1,7 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { DatabaseService } from './core/services/database.service';
 
@@ -14,8 +15,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideIonicAngular({
-      mode: 'md', // Material Design auf allen Plattformen (konsistentes Look & Feel)
+      mode: 'md',
     }),
+    provideCharts(withDefaultRegisterables()),
     {
       provide: APP_INITIALIZER,
       useFactory: initializeDatabase,
