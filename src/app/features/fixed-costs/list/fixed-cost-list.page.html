@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Fixkosten</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="navigateToForm()">
+        <ion-icon slot="icon-only" name="add-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Fixkosten</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Monatliche Gesamtkosten -->
+  @if (!isLoading && fixedCosts.length > 0) {
+    <div class="total-banner">
+      <span class="total-label">Monatlich gesamt (aktiv)</span>
+      <span class="total-amount">{{ getMonthlyTotal() | currencyFormat }}</span>
+    </div>
+  }
+
+  <!-- Fixkosten nach Zyklus gruppiert -->
+  @for (cycle of getCycles(); track cycle) {
+    <ion-list>
+      <ion-list-header>
+        <ion-label>{{ cycleLabels[cycle] }}</ion-label>
+      </ion-list-header>
+
+      @for (fc of grouped[cycle]; track fc.id) {
+        <ion-item-sliding>
+          <ion-item [class.inactive]="!fc.isActive">
+            <span
+              slot="start"
+              class="fc-icon"
+              [style.background]="(fc.categoryColor ?? '#888') + '22'"
+            >
+              <ion-icon
+                [name]="fc.categoryIcon ?? 'repeat-outline'"
+                [style.color]="fc.categoryColor ?? '#888'"
+              />
+            </span>
+            <ion-label>
+              <h3>{{ fc.name }}</h3>
+              <p>Am {{ fc.billingDay }}. des Monats</p>
+              @if (fc.notes) {
+                <p class="notes-text">{{ fc.notes }}</p>
+              }
+            </ion-label>
+            <ion-note slot="end" class="amount-note">
+              {{ fc.amount | currencyFormat }}
+            </ion-note>
+            <ion-toggle
+              slot="end"
+              [checked]="fc.isActive"
+              (ionChange)="toggleActive(fc)"
+            />
+          </ion-item>
+
+          <ion-item-options side="start">
+            <ion-item-option color="success" (click)="markAsPaid(fc)">
+              Bezahlt
+            </ion-item-option>
+          </ion-item-options>
+
+          <ion-item-options side="end">
+            <ion-item-option color="primary" (click)="navigateToForm(fc.id)">
+              <ion-icon slot="icon-only" name="create-outline" />
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="confirmDelete(fc)">
+              <ion-icon slot="icon-only" name="trash-outline" />
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      }
+    </ion-list>
+  }
+
+  <!-- Leer-Zustand -->
+  @if (!isLoading && fixedCosts.length === 0) {
+    <div class="empty-state">
+      <ion-icon name="repeat-outline" />
+      <h3>Noch keine Fixkosten</h3>
+      <p>Füge Miete, Abos und Versicherungen hinzu</p>
+      <ion-button (click)="navigateToForm()">Fixkosten hinzufügen</ion-button>
+    </div>
+  }
+
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button (click)="navigateToForm()">
+      <ion-icon name="add-outline" />
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Buchungen</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <!-- Monats-Navigation -->
+    <div class="month-nav">
+      <button class="nav-btn" (click)="previousMonth()">
+        <ion-icon name="chevron-back-outline" />
+      </button>
+      <span class="month-label">{{ monthLabel }}</span>
+      <button class="nav-btn" [disabled]="isCurrentMonth" (click)="nextMonth()">
+        <ion-icon name="chevron-forward-outline" />
+      </button>
+    </div>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      placeholder="Suchen..."
+      (ionInput)="onSearch($event)"
+      animated
+    />
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (filteredTransactions.length === 0 && !isLoading) {
+    <div class="empty-state">
+      <ion-icon name="list-outline" />
+      <h3>Keine Buchungen</h3>
+      <p>{{ searchQuery ? 'Keine Ergebnisse für „' + searchQuery + '"' : 'Noch keine Ausgaben in diesem Monat' }}</p>
+    </div>
+  } @else {
+    <ion-list lines="full">
+      @for (tx of filteredTransactions; track tx.id) {
+        <ion-item button (click)="openDetail(tx.id)">
+          <span
+            slot="start"
+            class="category-badge"
+            [style.background]="(tx.categoryColor ?? '#888') + '22'"
+          >
+            <ion-icon
+              [name]="tx.categoryIcon ?? 'ellipsis-horizontal-outline'"
+              [style.color]="tx.categoryColor ?? '#888'"
+            />
+          </span>
+          <ion-label>
+            <h3>{{ tx.description ?? tx.categoryName ?? 'Ausgabe' }}</h3>
+            <p>{{ tx.date | date:'EEEE, dd. MMMM':'':'de' }}</p>
+          </ion-label>
+          <ion-note slot="end" class="amount-expense">
+            –{{ tx.amount | currencyFormat }}
+          </ion-note>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</ion-content>

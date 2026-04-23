@@ -1,0 +1,109 @@
+// FinTrack Design Tokens
+// Primärfarbe: Teal #1D9E75
+// Akzentfarbe: Amber #EF9F27
+
+:root {
+  // Primary – Teal
+  --ion-color-primary: #1D9E75;
+  --ion-color-primary-rgb: 29, 158, 117;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #198b67;
+  --ion-color-primary-tint: #34a883;
+
+  // Secondary – Amber
+  --ion-color-secondary: #EF9F27;
+  --ion-color-secondary-rgb: 239, 159, 39;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #d28c22;
+  --ion-color-secondary-tint: #f1a93d;
+
+  // Tertiary
+  --ion-color-tertiary: #5F27CD;
+  --ion-color-tertiary-rgb: 95, 39, 205;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #5422b4;
+  --ion-color-tertiary-tint: #6f3dd2;
+
+  // Success
+  --ion-color-success: #1D9E75;
+  --ion-color-success-rgb: 29, 158, 117;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #198b67;
+  --ion-color-success-tint: #34a883;
+
+  // Warning
+  --ion-color-warning: #EF9F27;
+  --ion-color-warning-rgb: 239, 159, 39;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #d28c22;
+  --ion-color-warning-tint: #f1a93d;
+
+  // Danger
+  --ion-color-danger: #FF6B6B;
+  --ion-color-danger-rgb: 255, 107, 107;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #e05e5e;
+  --ion-color-danger-tint: #ff7a7a;
+
+  // Dark
+  --ion-color-dark: #1E2A38;
+  --ion-color-dark-rgb: 30, 42, 56;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1a2531;
+  --ion-color-dark-tint: #353f4c;
+
+  // Medium
+  --ion-color-medium: #8B9CB0;
+  --ion-color-medium-rgb: 139, 156, 176;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #7a899b;
+  --ion-color-medium-tint: #97a6b8;
+
+  // Light
+  --ion-color-light: #F4F6F9;
+  --ion-color-light-rgb: 244, 246, 249;
+  --ion-color-light-contrast: #1E2A38;
+  --ion-color-light-contrast-rgb: 30, 42, 56;
+  --ion-color-light-shade: #d7d9dc;
+  --ion-color-light-tint: #f5f7fa;
+}
+
+// Dark Mode
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #2EC08E;
+    --ion-color-primary-rgb: 46, 192, 142;
+    --ion-color-primary-shade: #29a87d;
+    --ion-color-primary-tint: #43c699;
+
+    --ion-background-color: #111827;
+    --ion-background-color-rgb: 17, 24, 39;
+
+    --ion-text-color: #F9FAFB;
+    --ion-text-color-rgb: 249, 250, 251;
+
+    --ion-color-step-50:  #1F2937;
+    --ion-color-step-100: #374151;
+    --ion-color-step-150: #4B5563;
+    --ion-color-step-200: #6B7280;
+    --ion-color-step-250: #9CA3AF;
+    --ion-color-step-300: #D1D5DB;
+    --ion-color-step-350: #E5E7EB;
+    --ion-color-step-400: #F3F4F6;
+    --ion-color-step-450: #F9FAFB;
+    --ion-color-step-500: #FFFFFF;
+
+    --ion-item-background: #1F2937;
+    --ion-toolbar-background: #1F2937;
+    --ion-tab-bar-background: #1F2937;
+    --ion-card-background: #1F2937;
+  }
+}

@@ -1,0 +1,20 @@
+<div class="category-picker-scroll">
+  @for (cat of categories; track cat.id) {
+    <button
+      class="category-item"
+      [class.category-item--selected]="cat.id === selectedCategoryId"
+      (click)="select(cat)"
+    >
+      <span
+        class="category-icon-wrapper"
+        [style.background-color]="cat.id === selectedCategoryId ? cat.color : cat.color + '22'"
+      >
+        <ion-icon
+          [name]="cat.icon"
+          [style.color]="cat.id === selectedCategoryId ? '#fff' : cat.color"
+        />
+      </span>
+      <span class="category-name">{{ cat.name }}</span>
+    </button>
+  }
+</div>

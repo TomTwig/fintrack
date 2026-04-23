@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+www/
+
+# Capacitor iOS (generated)
+ios/
+# Android – generierte Dateien ignorieren, aber native Ressourcen tracken
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+
+# Angular cache
+.angular/
+
+# Environment files with secrets
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Jest cache
+.jest-cache/
+
+# Coverage
+coverage/

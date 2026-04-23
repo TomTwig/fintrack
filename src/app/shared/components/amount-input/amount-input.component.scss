@@ -1,0 +1,74 @@
+.amount-display-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding: 24px 16px 16px;
+  gap: 8px;
+
+  .currency-symbol {
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ion-color-medium);
+  }
+
+  .amount-value {
+    font-size: 56px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ion-color-dark);
+    line-height: 1;
+    min-width: 120px;
+    text-align: right;
+  }
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+.numpad-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  border-radius: 16px;
+  border: none;
+  background: var(--ion-color-step-50, #f4f6f9);
+  color: var(--ion-color-dark);
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s ease, transform 0.1s ease;
+
+  &:active {
+    background: var(--ion-color-step-150, #d0d3d8);
+    transform: scale(0.95);
+  }
+
+  &--delete {
+    color: var(--ion-color-danger);
+
+    ion-icon {
+      font-size: 26px;
+    }
+  }
+
+  &--comma {
+    font-size: 28px;
+    font-weight: 700;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .amount-display-container .amount-value {
+    color: var(--ion-color-light);
+  }
+
+  .numpad-btn {
+    background: var(--ion-color-step-50, #1f2937);
+    color: var(--ion-text-color);
+  }
+}

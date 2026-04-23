@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/transactions" />
+    </ion-buttons>
+    <ion-title>Buchung</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="confirmDelete()">
+        <ion-icon slot="icon-only" name="trash-outline" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (transaction) {
+    <div class="amount-hero">
+      <span class="amount-value">{{ transaction.amount | currencyFormat }}</span>
+      <span class="amount-date">{{ transaction.date | date:'EEEE, dd. MMMM yyyy':'':'de' }}</span>
+    </div>
+
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Beschreibung</ion-label>
+        <ion-input
+          [(ngModel)]="editDescription"
+          placeholder="Beschreibung hinzufügen"
+          autocapitalize="sentences"
+        />
+      </ion-item>
+    </ion-list>
+
+    <div class="section-label">Kategorie ändern</div>
+    <app-category-picker
+      [selectedCategoryId]="editCategoryId"
+      (categorySelected)="editCategoryId = $event.id"
+    />
+
+    <div class="save-footer">
+      <ion-button expand="block" [disabled]="isSaving" (click)="save()">
+        Änderungen speichern
+      </ion-button>
+    </div>
+  }
+</ion-content>

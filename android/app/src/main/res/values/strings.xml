@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">FinTrack</string>
+  <string name="shortcut_quick_add_short">Eingabe</string>
+  <string name="shortcut_quick_add_long">Schnelleingabe</string>
+  <string name="shortcut_disabled">Schnelleingabe ist aktuell nicht verfügbar</string>
+</resources>

@@ -1,0 +1,7 @@
+{
+  "name": "fintrack",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

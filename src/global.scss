@@ -1,0 +1,86 @@
+// Ionic Base Styles
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+// Ionic Optional Utilities
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+// Global app styles
+* {
+  box-sizing: border-box;
+}
+
+ion-tab-bar {
+  --background: var(--ion-color-step-50);
+  border-top: 1px solid var(--ion-color-step-100);
+
+  ion-tab-button {
+    --color: var(--ion-color-medium);
+    --color-selected: var(--ion-color-primary);
+  }
+}
+
+// Prevent iOS bounce
+ion-content {
+  --overflow: hidden;
+}
+
+// Card styling
+ion-card {
+  border-radius: 16px;
+  margin: 8px 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+// Amount display
+.amount-display {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.amount-expense {
+  color: var(--ion-color-danger);
+}
+
+.amount-income {
+  color: var(--ion-color-success);
+}
+
+// Empty state
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    color: var(--ion-color-medium);
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+// Loading skeleton
+.skeleton-container {
+  padding: 16px;
+}

@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ isEditMode ? 'Bearbeiten' : 'Neue Fixkosten' }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Abbrechen</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button [disabled]="!isValid || isSaving" (click)="save()" strong>
+        Speichern
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Name -->
+    <ion-item>
+      <ion-label position="stacked">Name *</ion-label>
+      <ion-input
+        [(ngModel)]="name"
+        placeholder="z.B. Miete, Netflix, Versicherung"
+        autocapitalize="words"
+        maxlength="60"
+      />
+    </ion-item>
+
+    <!-- Betrag -->
+    <ion-item>
+      <ion-label position="stacked">Betrag *</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="amount"
+        placeholder="0,00"
+        inputmode="decimal"
+        min="0"
+        step="0.01"
+      />
+      <ion-note slot="end">€</ion-note>
+    </ion-item>
+
+    <!-- Kategorie -->
+    <ion-item>
+      <ion-label position="stacked">Kategorie</ion-label>
+    </ion-item>
+    <app-category-picker
+      [selectedCategoryId]="selectedCategoryId"
+      (categorySelected)="selectedCategoryId = $event.id"
+    />
+
+    <!-- Abrechnungstag -->
+    <ion-item>
+      <ion-label>Abrechnungstag</ion-label>
+      <ion-select [(ngModel)]="billingDay" interface="action-sheet">
+        @for (day of billingDays; track day) {
+          <ion-select-option [value]="day">{{ day }}.</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+
+    <!-- Zyklus -->
+    <ion-item>
+      <ion-label>Abrechnungszyklus</ion-label>
+      <ion-select [(ngModel)]="billingCycle" interface="action-sheet">
+        @for (cycle of cycles; track cycle.value) {
+          <ion-select-option [value]="cycle.value">{{ cycle.label }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+
+    <!-- Aktiv -->
+    <ion-item>
+      <ion-label>Aktiv</ion-label>
+      <ion-toggle [(ngModel)]="isActive" slot="end" />
+    </ion-item>
+
+    <!-- Notizen -->
+    <ion-item>
+      <ion-label position="stacked">Notizen</ion-label>
+      <ion-textarea
+        [(ngModel)]="notes"
+        placeholder="Optionale Notizen..."
+        [rows]="3"
+        maxlength="200"
+        autocapitalize="sentences"
+      />
+    </ion-item>
+  </ion-list>
+
+  <div class="save-footer">
+    <ion-button
+      expand="block"
+      [disabled]="!isValid || isSaving"
+      (click)="save()"
+    >
+      {{ isEditMode ? 'Änderungen speichern' : 'Fixkosten anlegen' }}
+    </ion-button>
+  </div>
+</ion-content>

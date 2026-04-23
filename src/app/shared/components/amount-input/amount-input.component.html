@@ -1,0 +1,21 @@
+<div class="amount-display-container">
+  <span class="currency-symbol">{{ currency }}</span>
+  <span class="amount-value">{{ displayValue }}</span>
+</div>
+
+<div class="numpad-grid">
+  @for (key of numpadKeys; track key) {
+    <button
+      class="numpad-btn"
+      [class.numpad-btn--delete]="key === 'del'"
+      [class.numpad-btn--comma]="key === ','"
+      (click)="onKey(key)"
+    >
+      @if (key === 'del') {
+        <ion-icon name="backspace-outline" />
+      } @else {
+        {{ key }}
+      }
+    </button>
+  }
+</div>

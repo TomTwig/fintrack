@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Schnelleingabe</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Schnelleingabe</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Betragseingabe -->
+  <app-amount-input (amountChange)="onAmountChange($event)" />
+
+  <!-- Kategorie-Auswahl -->
+  <div class="section-label">Kategorie</div>
+  <app-category-picker
+    filterType="expense"
+    [selectedCategoryId]="selectedCategoryId"
+    (categorySelected)="onCategorySelected($event.id)"
+  />
+
+  <!-- Beschreibung & Datum -->
+  <div class="details-section">
+    <ion-item lines="none" class="description-item">
+      <ion-input
+        [(ngModel)]="description"
+        placeholder="Beschreibung (optional)"
+        maxlength="100"
+        autocapitalize="sentences"
+      />
+    </ion-item>
+
+    <button class="date-button" (click)="showDatePicker = true">
+      <ion-icon name="calendar-outline" />
+      <span>{{ formattedDate }}</span>
+    </button>
+  </div>
+
+  <!-- Speichern -->
+  <div class="save-container">
+    <ion-button
+      expand="block"
+      size="large"
+      [disabled]="!canSave"
+      (click)="save()"
+      class="save-button"
+    >
+      Speichern
+    </ion-button>
+  </div>
+
+  <!-- Datums-Modal -->
+  <ion-modal
+    [isOpen]="showDatePicker"
+    (didDismiss)="showDatePicker = false"
+    [initialBreakpoint]="0.5"
+    [breakpoints]="[0, 0.5]"
+  >
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        locale="de-DE"
+        [value]="date"
+        (ionChange)="onDateChange($event)"
+        [max]="date"
+      />
+    </ng-template>
+  </ion-modal>
+</ion-content>
