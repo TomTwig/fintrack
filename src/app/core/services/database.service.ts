@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 
 import { DEFAULT_CATEGORIES } from '../models/category.model';
+
+import { IDbConnection } from './db-connection.interface';
+import { createWebDbAdapter } from './web-db.adapter';
 
 const DB_NAME = 'fintrack';
 const DB_VERSION = 1;
@@ -49,55 +52,51 @@ const CREATE_TABLES_SQL = `
 @Injectable({ providedIn: 'root' })
 export class DatabaseService {
   private sqlite = new SQLiteConnection(CapacitorSQLite);
-  private db: SQLiteDBConnection | null = null;
+  private connection: IDbConnection | null = null;
   private initialized = false;
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
 
-    const platform = Capacitor.getPlatform();
-
-    if (platform === 'web') {
-      // Warten bis das jeep-sqlite Custom Element vollständig registriert ist
-      await customElements.whenDefined('jeep-sqlite');
-      await this.sqlite.initWebStore();
+    if (Capacitor.getPlatform() === 'web') {
+      this.connection = await createWebDbAdapter();
+    } else {
+      const db = await this.sqlite.createConnection(
+        DB_NAME, false, 'no-encryption', DB_VERSION, false,
+      );
+      await db.open();
+      this.connection = db as unknown as IDbConnection;
     }
 
-    this.db = await this.sqlite.createConnection(DB_NAME, false, 'no-encryption', DB_VERSION, false);
-    await this.db.open();
-    await this.db.execute(CREATE_TABLES_SQL);
+    await this.connection.execute(CREATE_TABLES_SQL);
     await this.seedDefaultCategories();
-
     this.initialized = true;
   }
 
-  getDb(): SQLiteDBConnection {
-    if (!this.db) throw new Error('Database not initialized. Call initialize() first.');
-    return this.db;
+  getDb(): IDbConnection {
+    if (!this.connection) throw new Error('Database not initialized. Call initialize() first.');
+    return this.connection;
   }
 
   private async seedDefaultCategories(): Promise<void> {
     const db = this.getDb();
     const result = await db.query('SELECT COUNT(*) as count FROM categories');
-    const count = result.values?.[0]?.['count'] as number ?? 0;
-
+    const count = (result.values?.[0]?.['count'] as number) ?? 0;
     if (count > 0) return;
 
     const values = DEFAULT_CATEGORIES.map((c) => [c.name, c.icon, c.color, c.type]);
     const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
-    const flat = values.flat();
-
     await db.run(
       `INSERT INTO categories (name, icon, color, type) VALUES ${placeholders}`,
-      flat,
+      values.flat(),
     );
   }
 
   async close(): Promise<void> {
-    if (this.db) {
+    if (Capacitor.getPlatform() !== 'web') {
       await this.sqlite.closeConnection(DB_NAME, false);
-      this.db = null;
-      this.initialized = false;
     }
+    this.connection = null;
+    this.initialized = false;
   }
 }
