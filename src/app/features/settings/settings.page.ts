@@ -76,6 +76,7 @@ export class SettingsPage {
 
   private async resetData(): Promise<void> {
     try {
+      await this.db.ensureReady();
       const db = this.db.getDb();
       await db.run('DELETE FROM transactions');
       await db.run('DELETE FROM fixed_costs');

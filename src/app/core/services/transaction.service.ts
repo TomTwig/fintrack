@@ -20,13 +20,14 @@ export class TransactionService {
   constructor(private db: DatabaseService) {}
 
   async loadByMonth(year: number, month: number): Promise<void> {
-    const list = await this.getByMonth(year, month);
-    this.transactionsSubject.next(list);
+    await this.db.ensureReady();
+    this.transactionsSubject.next(await this.getByMonth(year, month));
   }
 
   async getByMonth(year: number, month: number): Promise<TransactionWithCategory[]> {
+    await this.db.ensureReady();
     const from = `${year}-${String(month).padStart(2, '0')}-01`;
-    const to = `${year}-${String(month).padStart(2, '0')}-31`;
+    const to   = `${year}-${String(month).padStart(2, '0')}-31`;
     const result = await this.db.getDb().query(
       `SELECT t.*, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
        FROM transactions t
@@ -39,6 +40,7 @@ export class TransactionService {
   }
 
   async getRecent(limit = 5): Promise<TransactionWithCategory[]> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().query(
       `SELECT t.*, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
        FROM transactions t
@@ -51,6 +53,7 @@ export class TransactionService {
   }
 
   async getById(id: number): Promise<TransactionWithCategory | null> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().query(
       `SELECT t.*, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
        FROM transactions t
@@ -62,48 +65,37 @@ export class TransactionService {
   }
 
   async addQuickEntry(entry: QuickEntry): Promise<Transaction> {
-    const newTx: NewTransaction = {
-      amount: entry.amount,
+    return this.create({
+      amount:      entry.amount,
       description: entry.description ?? null,
-      categoryId: entry.categoryId,
-      date: entry.date,
+      categoryId:  entry.categoryId,
+      date:        entry.date,
       isFixedCost: false,
       fixedCostId: null,
-    };
-    return this.create(newTx);
+    });
   }
 
   async create(data: NewTransaction): Promise<Transaction> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().run(
       `INSERT INTO transactions (amount, description, category_id, date, is_fixed_cost, fixed_cost_id)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [
-        data.amount,
-        data.description,
-        data.categoryId,
-        data.date,
-        data.isFixedCost ? 1 : 0,
-        data.fixedCostId,
-      ],
+      [data.amount, data.description, data.categoryId, data.date, data.isFixedCost ? 1 : 0, data.fixedCostId],
     );
     const id = result.changes?.lastId;
     if (!id) throw new Error('Failed to create transaction');
-
-    return {
-      ...data,
-      id,
-      createdAt: new Date().toISOString(),
-    };
+    return { ...data, id, createdAt: new Date().toISOString() };
   }
 
   async update(id: number, data: Partial<NewTransaction>): Promise<void> {
+    await this.db.ensureReady();
     const fields: string[] = [];
     const values: unknown[] = [];
 
-    if (data.amount !== undefined)      { fields.push('amount = ?');       values.push(data.amount); }
-    if (data.description !== undefined) { fields.push('description = ?');  values.push(data.description); }
-    if (data.categoryId !== undefined)  { fields.push('category_id = ?');  values.push(data.categoryId); }
-    if (data.date !== undefined)        { fields.push('date = ?');          values.push(data.date); }
+    if (data.amount      !== undefined) { fields.push('amount = ?');      values.push(data.amount); }
+    if (data.description !== undefined) { fields.push('description = ?'); values.push(data.description); }
+    if (data.categoryId  !== undefined) { fields.push('category_id = ?'); values.push(data.categoryId); }
+    if (data.date        !== undefined) { fields.push('date = ?');         values.push(data.date); }
 
     if (fields.length === 0) return;
     values.push(id);
@@ -115,13 +107,15 @@ export class TransactionService {
   }
 
   async delete(id: number): Promise<void> {
+    await this.db.ensureReady();
     await this.db.getDb().run('DELETE FROM transactions WHERE id = ?', [id]);
     this.transactionsSubject.next(this.transactionsSubject.value.filter((t) => t.id !== id));
   }
 
   async getMonthSummary(year: number, month: number): Promise<MonthSummary> {
+    await this.db.ensureReady();
     const from = `${year}-${String(month).padStart(2, '0')}-01`;
-    const to = `${year}-${String(month).padStart(2, '0')}-31`;
+    const to   = `${year}-${String(month).padStart(2, '0')}-31`;
 
     const result = await this.db.getDb().query(
       `SELECT
@@ -139,26 +133,22 @@ export class TransactionService {
     const totalIncome   = (row['total_income']   as number) ?? 0;
 
     return {
-      month,
-      year,
-      totalExpenses,
-      totalIncome,
+      month, year,
+      totalExpenses, totalIncome,
       balance: totalIncome - totalExpenses,
       transactionCount: (row['tx_count'] as number) ?? 0,
     };
   }
 
   async getCategorySummary(year: number, month: number): Promise<CategorySummary[]> {
+    await this.db.ensureReady();
     const from = `${year}-${String(month).padStart(2, '0')}-01`;
-    const to = `${year}-${String(month).padStart(2, '0')}-31`;
+    const to   = `${year}-${String(month).padStart(2, '0')}-31`;
 
     const result = await this.db.getDb().query(
-      `SELECT
-         c.id   AS category_id,
-         c.name AS category_name,
-         c.color AS category_color,
-         c.icon  AS category_icon,
-         SUM(t.amount) AS total
+      `SELECT c.id AS category_id, c.name AS category_name,
+              c.color AS category_color, c.icon AS category_icon,
+              SUM(t.amount) AS total
        FROM transactions t
        JOIN categories c ON t.category_id = c.id
        WHERE t.date BETWEEN ? AND ? AND c.type = 'expense'

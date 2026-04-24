@@ -53,11 +53,25 @@ const CREATE_TABLES_SQL = `
 export class DatabaseService {
   private sqlite = new SQLiteConnection(CapacitorSQLite);
   private connection: IDbConnection | null = null;
-  private initialized = false;
+  private readonly initPromise: Promise<void>;
 
-  async initialize(): Promise<void> {
-    if (this.initialized) return;
+  constructor() {
+    // Sofort starten – läuft parallel zum Angular-Bootstrap.
+    // APP_INITIALIZER ist damit nicht mehr nötig.
+    this.initPromise = this.runInitialize();
+  }
 
+  /** Warten bis DB-Init abgeschlossen ist. Idempotent – kann mehrfach aufgerufen werden. */
+  async ensureReady(): Promise<void> {
+    await this.initPromise;
+  }
+
+  getDb(): IDbConnection {
+    if (!this.connection) throw new Error('DB not ready – call ensureReady() first.');
+    return this.connection;
+  }
+
+  private async runInitialize(): Promise<void> {
     if (Capacitor.getPlatform() === 'web') {
       this.connection = await createWebDbAdapter();
     } else {
@@ -70,23 +84,16 @@ export class DatabaseService {
 
     await this.connection.execute(CREATE_TABLES_SQL);
     await this.seedDefaultCategories();
-    this.initialized = true;
-  }
-
-  getDb(): IDbConnection {
-    if (!this.connection) throw new Error('Database not initialized. Call initialize() first.');
-    return this.connection;
   }
 
   private async seedDefaultCategories(): Promise<void> {
-    const db = this.getDb();
-    const result = await db.query('SELECT COUNT(*) as count FROM categories');
+    const result = await this.connection!.query('SELECT COUNT(*) as count FROM categories');
     const count = (result.values?.[0]?.['count'] as number) ?? 0;
     if (count > 0) return;
 
     const values = DEFAULT_CATEGORIES.map((c) => [c.name, c.icon, c.color, c.type]);
     const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
-    await db.run(
+    await this.connection!.run(
       `INSERT INTO categories (name, icon, color, type) VALUES ${placeholders}`,
       values.flat(),
     );
@@ -97,6 +104,5 @@ export class DatabaseService {
       await this.sqlite.closeConnection(DB_NAME, false);
     }
     this.connection = null;
-    this.initialized = false;
   }
 }

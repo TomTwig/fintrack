@@ -13,11 +13,12 @@ export class CategoryService {
   constructor(private db: DatabaseService) {}
 
   async loadAll(): Promise<void> {
-    const cats = await this.getAll();
-    this.categoriesSubject.next(cats);
+    await this.db.ensureReady();
+    this.categoriesSubject.next(await this.getAll());
   }
 
   async getAll(): Promise<Category[]> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().query(
       'SELECT id, name, icon, color, type FROM categories ORDER BY name',
     );
@@ -25,6 +26,7 @@ export class CategoryService {
   }
 
   async getByType(type: CategoryType): Promise<Category[]> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().query(
       'SELECT id, name, icon, color, type FROM categories WHERE type = ? ORDER BY name',
       [type],
@@ -33,6 +35,7 @@ export class CategoryService {
   }
 
   async getById(id: number): Promise<Category | null> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().query(
       'SELECT id, name, icon, color, type FROM categories WHERE id = ?',
       [id],
@@ -41,6 +44,7 @@ export class CategoryService {
   }
 
   async create(data: NewCategory): Promise<Category> {
+    await this.db.ensureReady();
     const result = await this.db.getDb().run(
       'INSERT INTO categories (name, icon, color, type) VALUES (?, ?, ?, ?)',
       [data.name, data.icon, data.color, data.type],
@@ -53,13 +57,14 @@ export class CategoryService {
   }
 
   async update(id: number, data: Partial<NewCategory>): Promise<void> {
+    await this.db.ensureReady();
     const fields: string[] = [];
     const values: unknown[] = [];
 
-    if (data.name !== undefined) { fields.push('name = ?'); values.push(data.name); }
-    if (data.icon !== undefined) { fields.push('icon = ?'); values.push(data.icon); }
+    if (data.name  !== undefined) { fields.push('name = ?');  values.push(data.name); }
+    if (data.icon  !== undefined) { fields.push('icon = ?');  values.push(data.icon); }
     if (data.color !== undefined) { fields.push('color = ?'); values.push(data.color); }
-    if (data.type !== undefined) { fields.push('type = ?'); values.push(data.type); }
+    if (data.type  !== undefined) { fields.push('type = ?');  values.push(data.type); }
 
     if (fields.length === 0) return;
     values.push(id);
@@ -72,17 +77,18 @@ export class CategoryService {
   }
 
   async delete(id: number): Promise<void> {
+    await this.db.ensureReady();
     await this.db.getDb().run('DELETE FROM categories WHERE id = ?', [id]);
     this.categoriesSubject.next(this.categoriesSubject.value.filter((c) => c.id !== id));
   }
 
   private rowToCategory(row: Record<string, unknown>): Category {
     return {
-      id: row['id'] as number,
-      name: row['name'] as string,
-      icon: row['icon'] as string,
+      id:    row['id']    as number,
+      name:  row['name']  as string,
+      icon:  row['icon']  as string,
       color: row['color'] as string,
-      type: row['type'] as CategoryType,
+      type:  row['type']  as CategoryType,
     };
   }
 }

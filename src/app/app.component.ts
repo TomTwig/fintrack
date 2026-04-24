@@ -57,7 +57,18 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.removeSplash();
     this.setupDeepLinks();
+  }
+
+  private removeSplash(): void {
+    // Splash sofort ausblenden sobald Angular gerendert hat
+    requestAnimationFrame(() => {
+      const splash = document.getElementById('ft-splash');
+      if (!splash) return;
+      splash.classList.add('ft-out');
+      setTimeout(() => splash.remove(), 250);
+    });
   }
 
   private setupDeepLinks(): void {

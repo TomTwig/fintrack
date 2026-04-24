@@ -10,8 +10,63 @@
     <meta name="msapplication-tap-highlight" content="no" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- WASM parallel zum JS-Bundle laden – spart ~300ms auf dem kritischen Pfad -->
+    <link rel="preload" href="assets/sql-wasm-browser.wasm" as="fetch" crossorigin="anonymous" />
+
+    <!-- Inline Splash – erscheint sofort bevor JavaScript überhaupt geladen ist -->
+    <style>
+      #ft-splash {
+        position: fixed;
+        inset: 0;
+        background: #1D9E75;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        transition: opacity 0.22s ease-out;
+        -webkit-transition: opacity 0.22s ease-out;
+      }
+      #ft-splash.ft-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .ft-splash-ring {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ft-splash-ring svg {
+        width: 40px;
+        height: 40px;
+        fill: white;
+      }
+      .ft-splash-name {
+        color: white;
+        font-family: -apple-system, 'Roboto', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-top: 14px;
+      }
+    </style>
   </head>
   <body>
+    <!-- Splash wird von AppComponent entfernt sobald Angular fertig gerendert hat -->
+    <div id="ft-splash" aria-hidden="true">
+      <div class="ft-splash-ring">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5h-2v-2h2v2zm0-4h-2c0-3.25 3-3 3-5 0-1.1-.9-2-2-2s-2 .9-2 2H9c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.5-3 2.75-3 5z"/>
+        </svg>
+      </div>
+      <span class="ft-splash-name">FinTrack</span>
+    </div>
+
     <app-root></app-root>
   </body>
 </html>
