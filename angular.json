@@ -43,7 +43,7 @@
                 "output": "svg"
               },
               {
-                "glob": "sql-wasm.wasm",
+                "glob": "*.wasm",
                 "input": "node_modules/sql.js/dist",
                 "output": "assets"
               }
