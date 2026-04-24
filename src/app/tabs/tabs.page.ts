@@ -4,6 +4,7 @@ import { flashOutline, homeOutline, listOutline, repeatOutline, settingsOutline 
 import {
   IonIcon,
   IonLabel,
+  IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs,
@@ -12,9 +13,10 @@ import {
 @Component({
   selector: 'app-tabs',
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel],
   template: `
     <ion-tabs>
+      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="dashboard" href="/dashboard">
           <ion-icon name="home-outline" />
