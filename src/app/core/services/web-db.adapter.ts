@@ -1,4 +1,4 @@
-import type { BindParams, Database, SqlJsStatic } from 'sql.js';
+import type { BindParams, Database } from 'sql.js';
 
 import { IDbConnection } from './db-connection.interface';
 
@@ -6,7 +6,6 @@ const STORAGE_KEY = 'fintrack_db_v1';
 
 /**
  * Browser-SQLite über sql.js (WebAssembly).
- * Ersetzt jeep-sqlite, da dessen WASM-Binaries Versionskonflikte verursachen.
  * Daten werden nach jeder Mutation in localStorage persistiert.
  */
 export class WebDbAdapter implements IDbConnection {
@@ -56,7 +55,9 @@ export class WebDbAdapter implements IDbConnection {
 }
 
 export async function createWebDbAdapter(): Promise<WebDbAdapter> {
-  const initSqlJs = ((await import('sql.js')) as { default: SqlJsStatic }).default;
+  // sql.js default-Export ist InitSqlJsStatic (die Initialisierungs-Funktion),
+  // nicht SqlJsStatic (das fertig initialisierte Objekt).
+  const { default: initSqlJs } = await import('sql.js');
   const SQL = await initSqlJs({ locateFile: (file: string) => `assets/${file}` });
   const existing = WebDbAdapter.loadSaved();
   const db = existing ? new SQL.Database(existing) : new SQL.Database();
