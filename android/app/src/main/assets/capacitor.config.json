@@ -1,0 +1,29 @@
+{
+	"appId": "de.meinefinanzapp",
+	"appName": "FinTrack",
+	"webDir": "dist/fintrack/browser",
+	"plugins": {
+		"CapacitorSQLite": {
+			"iosDatabaseLocation": "Library/CapacitorDatabase",
+			"iosIsEncryption": false,
+			"androidIsEncryption": false
+		}
+	},
+	"android": {
+		"intentFilters": [
+			{
+				"action": "android.intent.action.VIEW",
+				"data": [
+					{
+						"scheme": "fintrack",
+						"host": "app"
+					}
+				],
+				"categories": [
+					"android.intent.category.DEFAULT",
+					"android.intent.category.BROWSABLE"
+				]
+			}
+		]
+	}
+}
