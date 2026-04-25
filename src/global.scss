@@ -27,9 +27,9 @@ ion-tab-bar {
   }
 }
 
-// Prevent iOS bounce
-ion-content {
-  --overflow: hidden;
+// Prevent overscroll/bounce without disabling touch events
+html, body {
+  overscroll-behavior: none;
 }
 
 // Card styling
