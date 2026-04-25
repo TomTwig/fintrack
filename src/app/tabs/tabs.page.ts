@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { flashOutline, homeOutline, listOutline, repeatOutline, settingsOutline } from 'ionicons/icons';
+import { flashOutline, homeOutline, listOutline, repeatOutline } from 'ionicons/icons';
 import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton } from '@ionic/angular/standalone';
 
 @Component({
@@ -27,10 +27,6 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton } from '@io
         <ion-icon name="repeat-outline"></ion-icon>
         <ion-label>Fixkosten</ion-label>
       </ion-tab-button>
-      <ion-tab-button routerLink="/settings" routerLinkActive #rla4="routerLinkActive" [selected]="rla4.isActive">
-        <ion-icon name="settings-outline"></ion-icon>
-        <ion-label>Einstellungen</ion-label>
-      </ion-tab-button>
     </ion-tab-bar>
   `,
   styles: [`
@@ -51,6 +47,6 @@ import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton } from '@io
 })
 export class TabsPage {
   constructor() {
-    addIcons({ homeOutline, flashOutline, listOutline, repeatOutline, settingsOutline });
+    addIcons({ homeOutline, flashOutline, listOutline, repeatOutline });
   }
 }

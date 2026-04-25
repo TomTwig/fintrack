@@ -55,11 +55,7 @@ export const routes: Routes = [
             (m) => m.FixedCostFormPage,
           ),
       },
-      {
-        path: 'settings',
-        loadComponent: () =>
-          import('./features/settings/settings.page').then((m) => m.SettingsPage),
-      },
+
     ],
   },
   {
