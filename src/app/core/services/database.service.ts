@@ -87,16 +87,14 @@ export class DatabaseService {
   }
 
   private async seedDefaultCategories(): Promise<void> {
-    const result = await this.connection!.query('SELECT COUNT(*) as count FROM categories');
-    const count = (result.values?.[0]?.['count'] as number) ?? 0;
-    if (count > 0) return;
-
-    const values = DEFAULT_CATEGORIES.map((c) => [c.name, c.icon, c.color, c.type]);
-    const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
-    await this.connection!.run(
-      `INSERT INTO categories (name, icon, color, type) VALUES ${placeholders}`,
-      values.flat(),
-    );
+    for (const c of DEFAULT_CATEGORIES) {
+      await this.connection!.run(
+        `INSERT INTO categories (name, icon, color, type)
+         SELECT ?, ?, ?, ?
+         WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = ?)`,
+        [c.name, c.icon, c.color, c.type, c.name],
+      );
+    }
   }
 
   async close(): Promise<void> {

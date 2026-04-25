@@ -20,5 +20,6 @@ export const DEFAULT_CATEGORIES: NewCategory[] = [
   { name: 'Einkommen', icon: 'cash-outline', color: '#1D9E75', type: 'income' },
   { name: 'Shopping', icon: 'bag-outline', color: '#C44569', type: 'expense' },
   { name: 'Bildung', icon: 'book-outline', color: '#786FA6', type: 'expense' },
+  { name: 'Sparplan', icon: 'trending-up-outline', color: '#20bf6b', type: 'expense' },
   { name: 'Sonstiges', icon: 'ellipsis-horizontal-outline', color: '#888EA8', type: 'expense' },
 ];
